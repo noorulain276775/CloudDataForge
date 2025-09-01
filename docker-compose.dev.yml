@@ -1,0 +1,28 @@
+services:
+  clouddataforge-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    container_name: clouddataforge-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - GCP_PROJECT_ID=${GCP_PROJECT_ID}
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/gcp_key.json
+      - BIGQUERY_DATASET_ID=${BIGQUERY_DATASET_ID}
+      - BIGQUERY_TABLE_ID=${BIGQUERY_TABLE_ID}
+      - PYTHONPATH=/app
+    volumes:
+      # Mount source code for hot reload
+      - ./app:/app/app
+      - ./gcp_key.json:/app/credentials/gcp_key.json:ro
+      - ./logs:/app/logs
+    command: ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    restart: unless-stopped
+    networks:
+      - clouddataforge-dev-network
+
+networks:
+  clouddataforge-dev-network:
+    driver: bridge

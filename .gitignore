@@ -2,9 +2,12 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+gcp_key.json
 # C extensions
 *.so
+PROJECT_STATUS.md
+
+.env.docker
 
 # Distribution / packaging
 .Python
